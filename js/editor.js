@@ -7,6 +7,7 @@ class LandingPageEditor {
         this.history = [];
         this.historyIndex = -1;
         this.draggedComponent = null;
+        this.currentImageTarget = null;
         
         this.init();
     }
@@ -53,7 +54,7 @@ class LandingPageEditor {
 
         // Click outside to deselect
         document.addEventListener('click', (e) => {
-            if (!e.target.closest('.component') && !e.target.closest('.sidebar')) {
+            if (!e.target.closest('.component') && !e.target.closest('.sidebar') && !e.target.closest('.modal')) {
                 this.deselectComponent();
             }
         });
@@ -108,14 +109,20 @@ class LandingPageEditor {
         const imageInput = document.getElementById('image-input');
         const imageUrl = document.getElementById('image-url');
 
-        let currentImageTarget = null;
-
         // Close modal
         [closeBtn, cancelBtn].forEach(btn => {
             btn.addEventListener('click', () => {
                 modal.classList.remove('active');
-                currentImageTarget = null;
+                this.currentImageTarget = null;
             });
+        });
+
+        // Close modal when clicking outside
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.classList.remove('active');
+                this.currentImageTarget = null;
+            }
         });
 
         // Upload area click
@@ -138,23 +145,35 @@ class LandingPageEditor {
         // Confirm upload
         confirmBtn.addEventListener('click', () => {
             const url = imageUrl.value;
-            if (url && currentImageTarget) {
-                this.setImageSrc(currentImageTarget, url);
+            if (url && this.currentImageTarget) {
+                this.setImageSrc(this.currentImageTarget, url);
                 modal.classList.remove('active');
-                currentImageTarget = null;
+                this.currentImageTarget = null;
                 imageUrl.value = '';
                 imageInput.value = '';
                 this.saveState();
             }
         });
 
-        // Image placeholder click handler
+        // Image placeholder click handler using event delegation
         document.addEventListener('click', (e) => {
-            if (e.target.closest('.image-placeholder')) {
-                currentImageTarget = e.target.closest('.image-placeholder');
+            // Check for image placeholder
+            if (e.target.classList.contains('image-placeholder') || 
+                e.target.closest('.image-placeholder')) {
+                
+                const placeholder = e.target.classList.contains('image-placeholder') 
+                    ? e.target 
+                    : e.target.closest('.image-placeholder');
+                
+                e.stopPropagation();
+                e.preventDefault();
+                
+                console.log('Image placeholder clicked:', placeholder);
+                this.currentImageTarget = placeholder;
                 modal.classList.add('active');
+                console.log('Modal should be open, active class added');
             }
-        });
+        }, true); // Use capture phase to ensure it fires first
     }
 
     addComponent(type) {
@@ -182,8 +201,11 @@ class LandingPageEditor {
 
         // Component selection
         component.addEventListener('click', (e) => {
-            e.stopPropagation();
-            this.selectComponent(component);
+            // Don't select if clicking on image placeholders
+            if (!e.target.closest('.image-placeholder')) {
+                e.stopPropagation();
+                this.selectComponent(component);
+            }
         });
 
         // Editable content
@@ -409,6 +431,7 @@ class LandingPageEditor {
         // Add click handler to change image
         placeholder.addEventListener('click', (e) => {
             e.stopPropagation();
+            e.preventDefault();
             this.currentImageTarget = placeholder;
             document.getElementById('image-modal').classList.add('active');
         });

@@ -321,50 +321,272 @@ img {
     }
 
     getComponentCSS() {
-        // Return the component-specific CSS from components.css
-        // This would ideally read from the CSS file, but for simplicity we'll include key styles
+        // Return the complete component-specific CSS matching components.css
         return `
+/* Header Section */
+.header-section {
+    background: white;
+    border-bottom: 1px solid #e5e5e5;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.navbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px 0;
+}
+
+.navbar-brand {
+    display: flex;
+    align-items: center;
+}
+
+.brand-logo {
+    height: 40px;
+    width: auto;
+    max-width: 150px;
+}
+
+.navbar-menu {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+}
+
+.navbar-nav {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+
+.nav-link {
+    text-decoration: none;
+    color: #333;
+    font-weight: 500;
+    font-size: 16px;
+    transition: color 0.2s;
+}
+
+.nav-link:hover {
+    color: var(--primary-color);
+}
+
+.navbar-cta .cta-button {
+    background: var(--primary-color);
+    color: white;
+    padding: 12px 24px;
+    font-weight: 600;
+    border-radius: 6px;
+}
+
+.mobile-menu-toggle {
+    display: none;
+    flex-direction: column;
+    cursor: pointer;
+    gap: 4px;
+}
+
+.mobile-menu-toggle span {
+    width: 25px;
+    height: 3px;
+    background: #333;
+    transition: all 0.3s;
+}
+
+/* Header Background Variants */
+.header-section.bg-white {
+    background: white;
+}
+
+.header-section.bg-light {
+    background: #f8f9fa;
+}
+
+.header-section.bg-dark {
+    background: #343a40;
+}
+
+.header-section.bg-dark .nav-link,
+.header-section.bg-dark .mobile-menu-toggle span {
+    color: white;
+}
+
+.header-section.bg-transparent {
+    background: transparent;
+    border-bottom: none;
+}
+
 /* Hero Section */
 .hero-section {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    text-align: center;
+    background: white;
+    color: #333;
     position: relative;
     overflow: hidden;
 }
 
-.hero-section::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.3);
-    z-index: 1;
+.hero-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+    min-height: 500px;
 }
 
 .hero-content {
-    position: relative;
-    z-index: 2;
+    text-align: left;
 }
 
 .hero-section h1 {
     font-size: 3.5rem;
     font-weight: 700;
     margin-bottom: 1.5rem;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    color: #333;
+    line-height: 1.1;
 }
 
 .hero-section p {
     font-size: 1.25rem;
     margin-bottom: 2rem;
-    opacity: 0.9;
+    color: #6c757d;
+    line-height: 1.6;
+}
+
+.hero-section .cta-button {
+    font-size: 1.1rem;
+    padding: 15px 30px;
+    background: var(--primary-color);
+    color: white;
+}
+
+.hero-image {
+    position: relative;
+}
+
+.hero-img {
+    width: 100%;
+    height: 400px;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.hero-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Hero Background Variants */
+.hero-section.bg-white {
+    background: white;
+}
+
+.hero-section.bg-light {
+    background: #f8f9fa;
+}
+
+.hero-section.bg-gradient-blue {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.hero-section.bg-gradient-blue h1,
+.hero-section.bg-gradient-blue p {
+    color: white;
+}
+
+.hero-section.bg-gradient-sunset {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    color: white;
+}
+
+.hero-section.bg-gradient-sunset h1,
+.hero-section.bg-gradient-sunset p {
+    color: white;
+}
+
+.hero-section.bg-gradient-ocean {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    color: white;
+}
+
+.hero-section.bg-gradient-ocean h1,
+.hero-section.bg-gradient-ocean p {
+    color: white;
+}
+
+.hero-section.bg-gradient-forest {
+    background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+    color: white;
+}
+
+.hero-section.bg-gradient-forest h1,
+.hero-section.bg-gradient-forest p {
+    color: white;
+}
+
+/* Image Handling */
+.image-placeholder {
+    background: #f8f9fa;
+    border: 2px dashed #dee2e6;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+    padding: 20px;
+}
+
+.image-placeholder:hover {
+    border-color: var(--primary-color);
+    background: #f0f8ff;
+}
+
+.image-placeholder i {
+    font-size: 2rem;
+    color: #6c757d;
+    margin-bottom: 10px;
+}
+
+.image-placeholder p {
+    color: #6c757d;
+    margin: 0;
+    font-size: 14px;
+}
+
+.image-container {
+    position: relative;
+    overflow: hidden;
+    border-radius: 8px;
+}
+
+.image-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s;
+}
+
+.image-container:hover img {
+    transform: scale(1.05);
 }
 
 /* Trust Badges */
 .trust-badges {
     background: #f8f9fa;
+}
+
+.trust-badges h2 {
+    text-align: center;
+    margin-bottom: 3rem;
+    color: #6c757d;
+    font-size: 1.5rem;
+    font-weight: 600;
 }
 
 .logos-grid {
@@ -388,7 +610,24 @@ img {
     transform: scale(1.05);
 }
 
+.logo-item img {
+    height: 100%;
+    width: auto;
+    object-fit: contain;
+}
+
 /* Benefits Section */
+.benefits-section {
+    background: white;
+}
+
+.benefits-section h2 {
+    text-align: center;
+    margin-bottom: 3rem;
+    font-size: 2.5rem;
+    color: #333;
+}
+
 .benefits-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
@@ -408,9 +647,35 @@ img {
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
 }
 
+.benefit-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.benefit-item h3 {
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+.benefit-item p {
+    color: #6c757d;
+    line-height: 1.7;
+}
+
 /* Process Steps */
 .process-section {
     background: #f8f9fa;
+}
+
+.process-section h2 {
+    text-align: center;
+    margin-bottom: 3rem;
+    font-size: 2.5rem;
+    color: #333;
 }
 
 .process-grid {
@@ -427,6 +692,11 @@ img {
     box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
     transition: all 0.3s;
     position: relative;
+}
+
+.process-step:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
 }
 
 .step-icon {
@@ -458,10 +728,26 @@ img {
     font-size: 14px;
 }
 
-/* Testimonial */
+.process-step h3 {
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+.process-step p {
+    color: #6c757d;
+    line-height: 1.7;
+}
+
+/* Testimonial Section */
 .testimonial-section {
     background: white;
     text-align: center;
+}
+
+.testimonial-content {
+    max-width: 800px;
+    margin: 0 auto;
 }
 
 .testimonial-quote {
@@ -480,9 +766,27 @@ img {
     font-weight: 700;
 }
 
+.testimonial-author {
+    font-size: 1.1rem;
+    color: #6c757d;
+    font-weight: 500;
+}
+
+.testimonial-company {
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
 /* FAQ Section */
 .faq-section {
     background: #f8f9fa;
+}
+
+.faq-section h2 {
+    text-align: center;
+    margin-bottom: 3rem;
+    font-size: 2.5rem;
+    color: #333;
 }
 
 .faq-container {
@@ -514,6 +818,10 @@ img {
     transition: all 0.2s;
 }
 
+.faq-question:hover {
+    background: #f8f9fa;
+}
+
 .faq-question::after {
     content: '+';
     font-size: 1.5rem;
@@ -537,11 +845,29 @@ img {
     max-height: 200px;
 }
 
+.faq-answer p {
+    color: #6c757d;
+    line-height: 1.7;
+    margin: 0;
+}
+
 /* Footer */
 .footer-section {
     background: #343a40;
     color: white;
     text-align: center;
+}
+
+.footer-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 40px;
+    margin-bottom: 30px;
+}
+
+.footer-logo {
+    height: 60px;
+    margin-bottom: 20px;
 }
 
 .footer-text {
@@ -556,30 +882,87 @@ img {
     font-size: 14px;
 }
 
-/* Background Variants */
-.bg-gradient-blue {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-}
-
-.bg-gradient-sunset {
-    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-}
-
-.bg-gradient-ocean {
-    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-}
-
-.bg-gradient-forest {
-    background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
-}
-
 /* Responsive Design */
 @media (max-width: 768px) {
-    .hero-section h1 { font-size: 2.5rem; }
-    .hero-section p { font-size: 1.1rem; }
-    .benefits-grid, .process-grid { grid-template-columns: 1fr; }
-    .logos-grid { gap: 30px; }
-    .testimonial-quote { font-size: 1.5rem; }
+    .navbar-menu {
+        display: none;
+    }
+    
+    .mobile-menu-toggle {
+        display: flex;
+    }
+    
+    .brand-logo {
+        height: 35px;
+    }
+
+    .hero-grid {
+        grid-template-columns: 1fr;
+        gap: 40px;
+        text-align: center;
+    }
+    
+    .hero-content {
+        text-align: center;
+    }
+    
+    .hero-section h1 {
+        font-size: 2.5rem;
+    }
+    
+    .hero-section p {
+        font-size: 1.1rem;
+    }
+    
+    .hero-img {
+        height: 300px;
+    }
+    
+    .benefits-grid,
+    .process-grid {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+    
+    .logos-grid {
+        gap: 30px;
+    }
+    
+    .logo-item {
+        height: 50px;
+    }
+    
+    .testimonial-quote {
+        font-size: 1.5rem;
+    }
+    
+    .process-step {
+        padding: 30px 15px;
+    }
+    
+    .step-icon {
+        width: 60px;
+        height: 60px;
+        font-size: 1.5rem;
+    }
+    
+    .footer-content {
+        grid-template-columns: 1fr;
+        gap: 30px;
+        text-align: center;
+    }
+}
+
+/* Animation Classes */
+.animate-on-scroll {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.6s ease;
+}
+
+.animate-on-scroll.animated {
+    opacity: 1;
+    transform: translateY(0);
 }
 `;
     }
