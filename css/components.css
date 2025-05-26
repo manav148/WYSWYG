@@ -687,3 +687,86 @@
     transform: translateY(-2px);
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
 }
+
+/* Preview Mode Classes - Force mobile styles for preview */
+.preview-mobile .navbar-menu {
+    display: none;
+}
+
+.preview-mobile .mobile-menu-toggle {
+    display: flex;
+}
+
+.preview-mobile .brand-logo {
+    height: 35px;
+}
+
+.preview-mobile .hero-grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+    text-align: center;
+}
+
+.preview-mobile .hero-content {
+    text-align: center;
+}
+
+.preview-mobile .hero-section h1 {
+    font-size: 2.5rem;
+}
+
+.preview-mobile .hero-section p {
+    font-size: 1.1rem;
+}
+
+.preview-mobile .hero-img {
+    height: 300px;
+}
+
+.preview-mobile .benefits-grid,
+.preview-mobile .process-grid {
+    grid-template-columns: 1fr;
+    gap: 30px;
+}
+
+.preview-mobile .logos-grid {
+    gap: 30px;
+}
+
+.preview-mobile .logo-item {
+    height: 50px;
+}
+
+.preview-mobile .testimonial-quote {
+    font-size: 1.5rem;
+}
+
+.preview-mobile .process-step {
+    padding: 30px 15px;
+}
+
+.preview-mobile .step-icon {
+    width: 60px;
+    height: 60px;
+    font-size: 1.5rem;
+}
+
+.preview-mobile .footer-content {
+    grid-template-columns: 1fr;
+    gap: 30px;
+    text-align: center;
+}
+
+/* Preview Tablet Mode */
+.preview-tablet .benefits-grid,
+.preview-tablet .process-grid {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
+.preview-tablet .hero-grid {
+    gap: 40px;
+}
+
+.preview-tablet .logos-grid {
+    gap: 35px;
+}

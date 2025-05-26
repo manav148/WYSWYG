@@ -460,6 +460,15 @@ class LandingPageEditor {
         
         // Update preview frame
         this.previewFrame.className = `preview-frame ${device}`;
+        
+        // Apply preview CSS classes to landing page content
+        this.landingPage.classList.remove('preview-mobile', 'preview-tablet', 'preview-desktop');
+        if (device === 'mobile') {
+            this.landingPage.classList.add('preview-mobile');
+        } else if (device === 'tablet') {
+            this.landingPage.classList.add('preview-tablet');
+        }
+        // Desktop doesn't need a special class as it's the default
     }
 
     saveState() {
