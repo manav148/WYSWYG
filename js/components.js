@@ -29,9 +29,9 @@ const Components = {
                         </div>
                         <div class="navbar-menu">
                             <div class="navbar-nav">
-                                <a href="#" class="nav-link editable" data-field="nav1">Why Buy Remnant</a>
-                                <a href="#" class="nav-link editable" data-field="nav2">How it works</a>
-                                <a href="#" class="nav-link editable" data-field="nav3">FAQ</a>
+                                <a href="#hero" class="nav-link editable" data-field="nav1">Why Buy Remnant</a>
+                                <a href="#benefits" class="nav-link editable" data-field="nav2">How it works</a>
+                                <a href="#faq" class="nav-link editable" data-field="nav3">FAQ</a>
                             </div>
                             <div class="navbar-cta">
                                 <a href="#" class="cta-button editable" data-field="header_cta">BUY REMNANT ADS</a>
@@ -63,7 +63,7 @@ const Components = {
         name: 'Hero Section',
         category: 'header',
         template: `
-            <section class="hero-section section large component" data-component="hero">
+            <section id="hero" class="hero-section section large component" data-component="hero">
                 <div class="component-controls">
                     <button class="control-btn" data-action="edit" title="Edit">
                         <i class="fas fa-edit"></i>
@@ -177,7 +177,7 @@ const Components = {
         name: 'Benefits Grid',
         category: 'content',
         template: `
-            <section class="benefits-section section component" data-component="benefits">
+            <section id="benefits" class="benefits-section section component" data-component="benefits">
                 <div class="component-controls">
                     <button class="control-btn" data-action="edit" title="Edit">
                         <i class="fas fa-edit"></i>
@@ -334,7 +334,7 @@ const Components = {
         name: 'FAQ Section',
         category: 'content',
         template: `
-            <section class="faq-section section component" data-component="faq">
+            <section id="faq" class="faq-section section component" data-component="faq">
                 <div class="component-controls">
                     <button class="control-btn" data-action="edit" title="Edit">
                         <i class="fas fa-edit"></i>
