@@ -1,0 +1,754 @@
+// Export functionality for landing pages
+class PageExporter {
+    constructor(landingPageElement, globalStyles) {
+        this.landingPage = landingPageElement;
+        this.globalStyles = globalStyles;
+        this.pageSettings = {
+            title: document.getElementById('page-title')?.value || 'My Landing Page',
+            description: document.getElementById('meta-description')?.value || 'A beautifully crafted landing page',
+            favicon: document.getElementById('favicon-url')?.value || ''
+        };
+    }
+
+    export() {
+        const exportModal = this.createExportModal();
+        document.body.appendChild(exportModal);
+        exportModal.classList.add('active');
+    }
+
+    createExportModal() {
+        const modal = document.createElement('div');
+        modal.className = 'modal export-modal';
+        modal.innerHTML = `
+            <div class="modal-content" style="max-width: 600px;">
+                <div class="modal-header">
+                    <h3>Export Landing Page</h3>
+                    <button class="close-btn" onclick="this.closest('.modal').remove()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="export-options">
+                        <div class="export-option">
+                            <button class="btn btn-primary export-btn" data-type="html">
+                                <i class="fas fa-file-code"></i>
+                                Download HTML File
+                            </button>
+                            <p>Download a complete HTML file ready to host</p>
+                        </div>
+                        <div class="export-option">
+                            <button class="btn btn-secondary export-btn" data-type="zip">
+                                <i class="fas fa-file-archive"></i>
+                                Download Project (ZIP)
+                            </button>
+                            <p>Download HTML, CSS, and assets as a project</p>
+                        </div>
+                        <div class="export-option">
+                            <button class="btn btn-secondary export-btn" data-type="preview">
+                                <i class="fas fa-external-link-alt"></i>
+                                Open Preview
+                            </button>
+                            <p>Open the landing page in a new tab</p>
+                        </div>
+                    </div>
+                    
+                    <div class="export-settings">
+                        <h4>Export Settings</h4>
+                        <div class="control-group">
+                            <label>
+                                <input type="checkbox" id="include-editor-styles" checked>
+                                Remove editor-specific styles
+                            </label>
+                        </div>
+                        <div class="control-group">
+                            <label>
+                                <input type="checkbox" id="minify-css" checked>
+                                Minify CSS
+                            </label>
+                        </div>
+                        <div class="control-group">
+                            <label>
+                                <input type="checkbox" id="include-faq-js">
+                                Include FAQ functionality
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        // Add event listeners
+        modal.querySelectorAll('.export-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const type = btn.getAttribute('data-type');
+                this.handleExport(type, modal);
+            });
+        });
+
+        return modal;
+    }
+
+    handleExport(type, modal) {
+        const settings = this.getExportSettings(modal);
+        
+        switch (type) {
+            case 'html':
+                this.exportHTML(settings);
+                break;
+            case 'zip':
+                this.exportZIP(settings);
+                break;
+            case 'preview':
+                this.openPreview(settings);
+                break;
+        }
+        
+        modal.remove();
+    }
+
+    getExportSettings(modal) {
+        return {
+            removeEditorStyles: modal.querySelector('#include-editor-styles').checked,
+            minifyCSS: modal.querySelector('#minify-css').checked,
+            includeFAQJS: modal.querySelector('#include-faq-js').checked
+        };
+    }
+
+    exportHTML(settings) {
+        const html = this.generateHTML(settings);
+        this.downloadFile(html, 'landing-page.html', 'text/html');
+    }
+
+    exportZIP(settings) {
+        // For a complete implementation, you'd use JSZip library
+        // For now, we'll export as HTML with embedded styles
+        const html = this.generateHTML(settings);
+        this.downloadFile(html, 'landing-page.html', 'text/html');
+        
+        // Show a message about the ZIP functionality
+        this.showMessage('ZIP export would require additional libraries. Downloading as HTML file instead.');
+    }
+
+    openPreview(settings) {
+        const html = this.generateHTML(settings);
+        const blob = new Blob([html], { type: 'text/html' });
+        const url = URL.createObjectURL(blob);
+        window.open(url, '_blank');
+    }
+
+    generateHTML(settings) {
+        const cleanHTML = this.cleanHTML(this.landingPage.innerHTML, settings);
+        const css = this.generateCSS(settings);
+        const js = settings.includeFAQJS ? this.generateJS() : '';
+
+        return `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>${this.pageSettings.title}</title>
+    <meta name="description" content="${this.pageSettings.description}">
+    ${this.pageSettings.favicon ? `<link rel="icon" href="${this.pageSettings.favicon}">` : ''}
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+${css}
+    </style>
+</head>
+<body>
+    <div class="landing-page">
+${cleanHTML}
+    </div>
+    ${js ? `<script>\n${js}\n</script>` : ''}
+</body>
+</html>`;
+    }
+
+    cleanHTML(html, settings) {
+        if (!settings.removeEditorStyles) {
+            return html;
+        }
+
+        // Remove editor-specific elements and classes
+        const div = document.createElement('div');
+        div.innerHTML = html;
+
+        // Remove component controls
+        div.querySelectorAll('.component-controls').forEach(el => el.remove());
+        div.querySelectorAll('.drag-handle').forEach(el => el.remove());
+
+        // Remove editor classes
+        div.querySelectorAll('.component').forEach(el => {
+            el.classList.remove('component', 'selected');
+        });
+
+        div.querySelectorAll('.editable').forEach(el => {
+            el.classList.remove('editable', 'editing');
+            el.removeAttribute('contenteditable');
+        });
+
+        // Remove data attributes used by editor
+        div.querySelectorAll('[data-component]').forEach(el => {
+            el.removeAttribute('data-component');
+        });
+
+        div.querySelectorAll('[data-field]').forEach(el => {
+            el.removeAttribute('data-field');
+        });
+
+        return div.innerHTML;
+    }
+
+    generateCSS(settings) {
+        let css = '';
+
+        // Add base styles
+        css += this.getBaseCSS();
+
+        // Add component styles
+        css += this.getComponentCSS();
+
+        // Add global variables
+        css += this.getGlobalVariablesCSS();
+
+        // Minify if requested
+        if (settings.minifyCSS) {
+            css = this.minifyCSS(css);
+        }
+
+        return css;
+    }
+
+    getBaseCSS() {
+        return `
+/* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-family, 'Inter', sans-serif);
+    font-size: var(--base-font-size, 16px);
+    line-height: 1.6;
+    color: #333;
+    background: #ffffff;
+}
+
+/* Container */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Sections */
+.section {
+    padding: 60px 0;
+}
+
+.section.small {
+    padding: 40px 0;
+}
+
+.section.large {
+    padding: 80px 0;
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+    margin: 0 0 1rem 0;
+    font-weight: 600;
+    line-height: 1.2;
+}
+
+h1 { font-size: 2.5rem; }
+h2 { font-size: 2rem; }
+h3 { font-size: 1.5rem; }
+h4 { font-size: 1.25rem; }
+h5 { font-size: 1.125rem; }
+h6 { font-size: 1rem; }
+
+p {
+    margin: 0 0 1rem 0;
+}
+
+/* Buttons */
+.cta-button {
+    display: inline-block;
+    padding: 12px 24px;
+    background: var(--primary-color);
+    color: white;
+    text-decoration: none;
+    border-radius: 6px;
+    font-weight: 600;
+    transition: all 0.2s;
+    border: none;
+    cursor: pointer;
+    font-size: inherit;
+}
+
+.cta-button:hover {
+    background: #0056b3;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+}
+
+/* Images */
+img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 4px;
+}
+
+/* Utility Classes */
+.text-center { text-align: center; }
+.text-left { text-align: left; }
+.text-right { text-align: right; }
+
+/* Responsive */
+@media (max-width: 768px) {
+    h1 { font-size: 2rem; }
+    h2 { font-size: 1.75rem; }
+    h3 { font-size: 1.25rem; }
+    
+    .section { padding: 40px 0; }
+    .section.large { padding: 60px 0; }
+    .container { padding: 0 15px; }
+}
+`;
+    }
+
+    getComponentCSS() {
+        // Return the component-specific CSS from components.css
+        // This would ideally read from the CSS file, but for simplicity we'll include key styles
+        return `
+/* Hero Section */
+.hero-section {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.3);
+    z-index: 1;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+}
+
+.hero-section h1 {
+    font-size: 3.5rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.hero-section p {
+    font-size: 1.25rem;
+    margin-bottom: 2rem;
+    opacity: 0.9;
+}
+
+/* Trust Badges */
+.trust-badges {
+    background: #f8f9fa;
+}
+
+.logos-grid {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
+    flex-wrap: wrap;
+}
+
+.logo-item {
+    height: 60px;
+    opacity: 0.7;
+    transition: all 0.3s;
+    filter: grayscale(100%);
+}
+
+.logo-item:hover {
+    opacity: 1;
+    filter: grayscale(0%);
+    transform: scale(1.05);
+}
+
+/* Benefits Section */
+.benefits-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 40px;
+    align-items: start;
+}
+
+.benefit-item {
+    text-align: center;
+    padding: 30px 20px;
+    border-radius: 12px;
+    transition: all 0.3s;
+}
+
+.benefit-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+/* Process Steps */
+.process-section {
+    background: #f8f9fa;
+}
+
+.process-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 40px;
+}
+
+.process-step {
+    text-align: center;
+    padding: 40px 20px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s;
+    position: relative;
+}
+
+.step-icon {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 20px;
+    background: var(--primary-color);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    color: white;
+}
+
+.step-number {
+    position: absolute;
+    top: -15px;
+    left: 20px;
+    background: var(--primary-color);
+    color: white;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 14px;
+}
+
+/* Testimonial */
+.testimonial-section {
+    background: white;
+    text-align: center;
+}
+
+.testimonial-quote {
+    font-size: 1.75rem;
+    font-style: italic;
+    color: #333;
+    margin-bottom: 2rem;
+    line-height: 1.4;
+}
+
+.testimonial-quote::before,
+.testimonial-quote::after {
+    content: '"';
+    color: var(--primary-color);
+    font-size: 3rem;
+    font-weight: 700;
+}
+
+/* FAQ Section */
+.faq-section {
+    background: #f8f9fa;
+}
+
+.faq-container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.faq-item {
+    background: white;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+}
+
+.faq-question {
+    width: 100%;
+    padding: 20px;
+    background: none;
+    border: none;
+    text-align: left;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #333;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.2s;
+}
+
+.faq-question::after {
+    content: '+';
+    font-size: 1.5rem;
+    color: var(--primary-color);
+    transition: transform 0.2s;
+}
+
+.faq-question.active::after {
+    transform: rotate(45deg);
+}
+
+.faq-answer {
+    padding: 0 20px;
+    max-height: 0;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.faq-answer.active {
+    padding: 0 20px 20px;
+    max-height: 200px;
+}
+
+/* Footer */
+.footer-section {
+    background: #343a40;
+    color: white;
+    text-align: center;
+}
+
+.footer-text {
+    color: #adb5bd;
+    line-height: 1.7;
+}
+
+.footer-bottom {
+    padding-top: 30px;
+    border-top: 1px solid #495057;
+    color: #adb5bd;
+    font-size: 14px;
+}
+
+/* Background Variants */
+.bg-gradient-blue {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.bg-gradient-sunset {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+
+.bg-gradient-ocean {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+}
+
+.bg-gradient-forest {
+    background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .hero-section h1 { font-size: 2.5rem; }
+    .hero-section p { font-size: 1.1rem; }
+    .benefits-grid, .process-grid { grid-template-columns: 1fr; }
+    .logos-grid { gap: 30px; }
+    .testimonial-quote { font-size: 1.5rem; }
+}
+`;
+    }
+
+    getGlobalVariablesCSS() {
+        return `
+/* Global Variables */
+:root {
+    --primary-color: ${this.globalStyles.primaryColor || '#007bff'};
+    --secondary-color: ${this.globalStyles.secondaryColor || '#6c757d'};
+    --font-family: ${this.globalStyles.fontFamily || 'Inter'};
+    --base-font-size: ${this.globalStyles.baseFontSize || '16px'};
+}
+`;
+    }
+
+    generateJS() {
+        return `
+// FAQ functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const faqQuestions = document.querySelectorAll('.faq-question');
+    
+    faqQuestions.forEach(question => {
+        question.addEventListener('click', function() {
+            const answer = this.nextElementSibling;
+            const isActive = this.classList.contains('active');
+            
+            // Close all other FAQs
+            faqQuestions.forEach(q => {
+                q.classList.remove('active');
+                q.nextElementSibling.classList.remove('active');
+            });
+            
+            // Toggle current FAQ
+            if (!isActive) {
+                this.classList.add('active');
+                answer.classList.add('active');
+            }
+        });
+    });
+    
+    // Smooth scrolling for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
+});
+`;
+    }
+
+    minifyCSS(css) {
+        return css
+            .replace(/\/\*[\s\S]*?\*\//g, '') // Remove comments
+            .replace(/\s+/g, ' ') // Replace multiple spaces with single space
+            .replace(/;\s*}/g, '}') // Remove semicolon before closing brace
+            .replace(/\s*{\s*/g, '{') // Remove spaces around opening brace
+            .replace(/;\s*/g, ';') // Remove spaces after semicolons
+            .replace(/,\s*/g, ',') // Remove spaces after commas
+            .trim();
+    }
+
+    downloadFile(content, filename, mimeType) {
+        const blob = new Blob([content], { type: mimeType });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = filename;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+    }
+
+    showMessage(message, type = 'info') {
+        const notification = document.createElement('div');
+        notification.className = `notification ${type}`;
+        notification.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: ${type === 'error' ? '#dc3545' : '#007bff'};
+            color: white;
+            padding: 15px 20px;
+            border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            z-index: 10000;
+            animation: slideIn 0.3s ease;
+        `;
+        notification.textContent = message;
+        
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+            notification.style.animation = 'slideOut 0.3s ease forwards';
+            setTimeout(() => notification.remove(), 300);
+        }, 3000);
+    }
+}
+
+// Add slide animations
+const style = document.createElement('style');
+style.textContent = `
+@keyframes slideIn {
+    from { transform: translateX(100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes slideOut {
+    from { transform: translateX(0); opacity: 1; }
+    to { transform: translateX(100%); opacity: 0; }
+}
+
+.export-modal .modal-content {
+    max-width: 600px;
+}
+
+.export-options {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.export-option {
+    padding: 20px;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.export-option .btn {
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.export-option p {
+    margin: 0;
+    color: #6c757d;
+    font-size: 14px;
+}
+
+.export-settings {
+    border-top: 1px solid #dee2e6;
+    padding-top: 20px;
+}
+
+.export-settings h4 {
+    margin-bottom: 15px;
+    color: #333;
+}
+
+.export-settings .control-group {
+    margin-bottom: 10px;
+}
+
+.export-settings label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    font-size: 14px;
+}
+`;
+document.head.appendChild(style);

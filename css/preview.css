@@ -1,0 +1,345 @@
+/* Landing Page Preview Styles */
+.landing-page {
+    font-family: var(--font-family, 'Inter', sans-serif);
+    font-size: var(--base-font-size, 16px);
+    line-height: 1.6;
+    color: #333;
+    background: #ffffff;
+}
+
+/* Global CSS Variables */
+:root {
+    --primary-color: #007bff;
+    --secondary-color: #6c757d;
+    --font-family: 'Inter', sans-serif;
+    --base-font-size: 16px;
+}
+
+/* Component Hover Effects for Editor */
+.component {
+    position: relative;
+    transition: all 0.2s;
+}
+
+.component:hover {
+    outline: 2px dashed #007bff;
+    outline-offset: 2px;
+}
+
+.component.selected {
+    outline: 2px solid #007bff;
+    outline-offset: 2px;
+}
+
+/* Component Controls */
+.component-controls {
+    position: absolute;
+    top: -30px;
+    right: 0;
+    background: #007bff;
+    border-radius: 4px;
+    padding: 5px;
+    display: none;
+    gap: 5px;
+    z-index: 10;
+}
+
+.component:hover .component-controls,
+.component.selected .component-controls {
+    display: flex;
+}
+
+.control-btn {
+    background: none;
+    border: none;
+    color: white;
+    padding: 4px;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: all 0.2s;
+}
+
+.control-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+/* Drag Handle */
+.drag-handle {
+    position: absolute;
+    left: -30px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: #007bff;
+    color: white;
+    padding: 8px 4px;
+    border-radius: 4px;
+    cursor: move;
+    display: none;
+    z-index: 10;
+}
+
+.component:hover .drag-handle {
+    display: block;
+}
+
+/* Editable Content */
+.editable {
+    position: relative;
+    cursor: text;
+}
+
+.editable:hover {
+    background: rgba(0, 123, 255, 0.1);
+    border-radius: 3px;
+}
+
+.editable.editing {
+    background: rgba(0, 123, 255, 0.2);
+    outline: 1px solid #007bff;
+    border-radius: 3px;
+}
+
+/* Image Placeholders */
+.image-placeholder {
+    background: #f8f9fa;
+    border: 2px dashed #dee2e6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #6c757d;
+    cursor: pointer;
+    transition: all 0.2s;
+    min-height: 200px;
+}
+
+.image-placeholder:hover {
+    border-color: #007bff;
+    background: #e3f2fd;
+    color: #007bff;
+}
+
+.image-placeholder i {
+    font-size: 48px;
+    margin-bottom: 10px;
+}
+
+.image-placeholder p {
+    margin: 0;
+    font-weight: 500;
+}
+
+/* Responsive Images */
+img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 4px;
+}
+
+/* Buttons */
+.cta-button {
+    display: inline-block;
+    padding: 12px 24px;
+    background: var(--primary-color);
+    color: white;
+    text-decoration: none;
+    border-radius: 6px;
+    font-weight: 600;
+    transition: all 0.2s;
+    border: none;
+    cursor: pointer;
+    font-size: inherit;
+}
+
+.cta-button:hover {
+    background: #0056b3;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+}
+
+.cta-button.secondary {
+    background: transparent;
+    color: var(--primary-color);
+    border: 2px solid var(--primary-color);
+}
+
+.cta-button.secondary:hover {
+    background: var(--primary-color);
+    color: white;
+}
+
+/* Grid Systems */
+.grid {
+    display: grid;
+    gap: 20px;
+}
+
+.grid-2 {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
+.grid-3 {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+}
+
+.grid-4 {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+
+/* Container */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Sections */
+.section {
+    padding: 60px 0;
+}
+
+.section.small {
+    padding: 40px 0;
+}
+
+.section.large {
+    padding: 80px 0;
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+    margin: 0 0 1rem 0;
+    font-weight: 600;
+    line-height: 1.2;
+}
+
+h1 {
+    font-size: 2.5rem;
+}
+
+h2 {
+    font-size: 2rem;
+}
+
+h3 {
+    font-size: 1.5rem;
+}
+
+h4 {
+    font-size: 1.25rem;
+}
+
+h5 {
+    font-size: 1.125rem;
+}
+
+h6 {
+    font-size: 1rem;
+}
+
+p {
+    margin: 0 0 1rem 0;
+}
+
+/* Responsive Typography */
+@media (max-width: 768px) {
+    h1 {
+        font-size: 2rem;
+    }
+    
+    h2 {
+        font-size: 1.75rem;
+    }
+    
+    h3 {
+        font-size: 1.25rem;
+    }
+    
+    .section {
+        padding: 40px 0;
+    }
+    
+    .section.large {
+        padding: 60px 0;
+    }
+    
+    .grid-2,
+    .grid-3,
+    .grid-4 {
+        grid-template-columns: 1fr;
+    }
+    
+    .container {
+        padding: 0 15px;
+    }
+}
+
+/* Animation Classes */
+.fade-in {
+    animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Utility Classes */
+.text-center {
+    text-align: center;
+}
+
+.text-left {
+    text-align: left;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.mb-0 { margin-bottom: 0; }
+.mb-1 { margin-bottom: 0.25rem; }
+.mb-2 { margin-bottom: 0.5rem; }
+.mb-3 { margin-bottom: 1rem; }
+.mb-4 { margin-bottom: 1.5rem; }
+.mb-5 { margin-bottom: 3rem; }
+
+.mt-0 { margin-top: 0; }
+.mt-1 { margin-top: 0.25rem; }
+.mt-2 { margin-top: 0.5rem; }
+.mt-3 { margin-top: 1rem; }
+.mt-4 { margin-top: 1.5rem; }
+.mt-5 { margin-top: 3rem; }
+
+.p-0 { padding: 0; }
+.p-1 { padding: 0.25rem; }
+.p-2 { padding: 0.5rem; }
+.p-3 { padding: 1rem; }
+.p-4 { padding: 1.5rem; }
+.p-5 { padding: 3rem; }
+
+/* Dark/Light Backgrounds */
+.bg-light {
+    background: #f8f9fa;
+}
+
+.bg-dark {
+    background: #343a40;
+    color: white;
+}
+
+.bg-primary {
+    background: var(--primary-color);
+    color: white;
+}
+
+.bg-secondary {
+    background: var(--secondary-color);
+    color: white;
+}
