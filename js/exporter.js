@@ -712,21 +712,6 @@ img {
     color: white;
 }
 
-.step-number {
-    position: absolute;
-    top: -15px;
-    left: 20px;
-    background: var(--primary-color);
-    color: white;
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 700;
-    font-size: 14px;
-}
 
 .process-step h3 {
     font-size: 1.5rem;
@@ -867,7 +852,15 @@ img {
 
 .footer-logo {
     height: 60px;
-    margin-bottom: 20px;
+    width: auto;
+    max-width: 200px;
+    margin: 0 auto 20px auto;
+}
+
+.footer-logo img {
+    height: 100%;
+    width: auto;
+    object-fit: contain;
 }
 
 .footer-text {

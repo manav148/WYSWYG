@@ -260,7 +260,6 @@ const Components = {
                     <h2 class="editable" data-field="title">Our Simple Process</h2>
                     <div class="process-grid">
                         <div class="process-step">
-                            <div class="step-number">1</div>
                             <div class="step-icon">
                                 <i class="fas fa-lightbulb"></i>
                             </div>
@@ -268,7 +267,6 @@ const Components = {
                             <p class="editable" data-field="step1_text">We analyze your goals and create a tailored strategy designed for maximum impact and efficiency.</p>
                         </div>
                         <div class="process-step">
-                            <div class="step-number">2</div>
                             <div class="step-icon">
                                 <i class="fas fa-rocket"></i>
                             </div>
@@ -276,7 +274,6 @@ const Components = {
                             <p class="editable" data-field="step2_text">Our expert team executes the plan with precision, ensuring quality and timely delivery.</p>
                         </div>
                         <div class="process-step">
-                            <div class="step-number">3</div>
                             <div class="step-icon">
                                 <i class="fas fa-chart-line"></i>
                             </div>
