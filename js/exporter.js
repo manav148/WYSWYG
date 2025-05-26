@@ -139,7 +139,7 @@ class PageExporter {
     generateHTML(settings) {
         const cleanHTML = this.cleanHTML(this.landingPage.innerHTML, settings);
         const css = this.generateCSS(settings);
-        const js = settings.includeFAQJS ? this.generateJS() : '';
+        const js = this.generateJS(settings.includeFAQJS);
 
         return `<!DOCTYPE html>
 <html lang="en">
@@ -394,6 +394,77 @@ img {
     height: 3px;
     background: #333;
     transition: all 0.3s;
+}
+
+/* Mobile menu active state */
+.mobile-menu-toggle.active span:nth-child(1) {
+    transform: rotate(45deg) translate(5px, 5px);
+}
+
+.mobile-menu-toggle.active span:nth-child(2) {
+    opacity: 0;
+}
+
+.mobile-menu-toggle.active span:nth-child(3) {
+    transform: rotate(-45deg) translate(7px, -6px);
+}
+
+/* Mobile menu dropdown */
+@media (max-width: 768px) {
+    .navbar-menu {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: white;
+        border: 1px solid #e5e5e5;
+        border-top: none;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-10px);
+        transition: all 0.3s ease;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0;
+        z-index: 1000;
+    }
+    
+    .navbar-menu.mobile-menu-open {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+        display: flex;
+    }
+    
+    .navbar-nav {
+        flex-direction: column;
+        gap: 0;
+        width: 100%;
+    }
+    
+    .nav-link {
+        padding: 15px 20px;
+        border-bottom: 1px solid #f0f0f0;
+        display: block;
+        width: 100%;
+    }
+    
+    .nav-link:hover {
+        background: #f8f9fa;
+    }
+    
+    .navbar-cta {
+        padding: 15px 20px;
+        border-top: 1px solid #f0f0f0;
+    }
+    
+    .navbar-cta .cta-button {
+        width: 100%;
+        text-align: center;
+        justify-content: center;
+        display: flex;
+    }
 }
 
 /* Header Background Variants */
@@ -972,10 +1043,42 @@ img {
 `;
     }
 
-    generateJS() {
-        return `
-// FAQ functionality
+    generateJS(includeFAQJS = false) {
+        let js = `
+// Mobile Menu functionality
 document.addEventListener('DOMContentLoaded', function() {
+    // Mobile menu toggle
+    const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
+    const navbarMenu = document.querySelector('.navbar-menu');
+    
+    if (mobileMenuToggle && navbarMenu) {
+        mobileMenuToggle.addEventListener('click', function() {
+            navbarMenu.classList.toggle('mobile-menu-open');
+            mobileMenuToggle.classList.toggle('active');
+        });
+        
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!mobileMenuToggle.contains(e.target) && !navbarMenu.contains(e.target)) {
+                navbarMenu.classList.remove('mobile-menu-open');
+                mobileMenuToggle.classList.remove('active');
+            }
+        });
+        
+        // Close mobile menu when clicking on a nav link
+        const navLinks = navbarMenu.querySelectorAll('.nav-link');
+        navLinks.forEach(link => {
+            link.addEventListener('click', function() {
+                navbarMenu.classList.remove('mobile-menu-open');
+                mobileMenuToggle.classList.remove('active');
+            });
+        });
+    }`;
+
+        if (includeFAQJS) {
+            js += `
+    
+    // FAQ functionality
     const faqQuestions = document.querySelectorAll('.faq-question');
     
     faqQuestions.forEach(question => {
@@ -995,7 +1098,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 answer.classList.add('active');
             }
         });
-    });
+    });`;
+        }
+
+        js += `
     
     // Smooth scrolling for anchor links
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
@@ -1010,8 +1116,9 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     });
-});
-`;
+});`;
+
+        return js;
     }
 
     minifyCSS(css) {
