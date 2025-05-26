@@ -1,5 +1,64 @@
 // Component definitions for the WYSIWYG editor
 const Components = {
+    header: {
+        name: 'Header/Navigation',
+        category: 'header',
+        template: `
+            <header class="header-section component" data-component="header">
+                <div class="component-controls">
+                    <button class="control-btn" data-action="edit" title="Edit">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="control-btn" data-action="duplicate" title="Duplicate">
+                        <i class="fas fa-copy"></i>
+                    </button>
+                    <button class="control-btn" data-action="delete" title="Delete">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+                <div class="drag-handle">
+                    <i class="fas fa-grip-vertical"></i>
+                </div>
+                <div class="container">
+                    <nav class="navbar">
+                        <div class="navbar-brand">
+                            <div class="image-placeholder brand-logo" data-field="logo">
+                                <i class="fas fa-image"></i>
+                                <p>Logo</p>
+                            </div>
+                        </div>
+                        <div class="navbar-menu">
+                            <div class="navbar-nav">
+                                <a href="#" class="nav-link editable" data-field="nav1">Why Buy Remnant</a>
+                                <a href="#" class="nav-link editable" data-field="nav2">How it works</a>
+                                <a href="#" class="nav-link editable" data-field="nav3">FAQ</a>
+                            </div>
+                            <div class="navbar-cta">
+                                <a href="#" class="cta-button editable" data-field="header_cta">BUY REMNANT ADS</a>
+                            </div>
+                        </div>
+                        <div class="mobile-menu-toggle">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                    </nav>
+                </div>
+            </header>
+        `,
+        fields: {
+            logo: { type: 'image', label: 'Company Logo' },
+            nav1: { type: 'text', label: 'Navigation Link 1' },
+            nav2: { type: 'text', label: 'Navigation Link 2' },
+            nav3: { type: 'text', label: 'Navigation Link 3' },
+            header_cta: { type: 'text', label: 'Header CTA Button' }
+        },
+        styles: {
+            background: { type: 'select', options: ['bg-white', 'bg-light', 'bg-dark', 'bg-transparent'] },
+            position: { type: 'select', options: ['static', 'sticky'] }
+        }
+    },
+
     hero: {
         name: 'Hero Section',
         category: 'header',
@@ -20,10 +79,18 @@ const Components = {
                     <i class="fas fa-grip-vertical"></i>
                 </div>
                 <div class="container">
-                    <div class="hero-content">
-                        <h1 class="editable" data-field="title">Premium Solutions at Unbeatable Prices</h1>
-                        <p class="editable" data-field="subtitle">Transform your business with our expert services and achieve remarkable results at up to 70% less cost.</p>
-                        <a href="#" class="cta-button editable" data-field="cta">Get Started Today</a>
+                    <div class="hero-grid">
+                        <div class="hero-content">
+                            <h1 class="editable" data-field="title">Remnant Media Buying Experts</h1>
+                            <p class="editable" data-field="subtitle">Premium advertising at up to 70% less spend.</p>
+                            <a href="#" class="cta-button editable" data-field="cta">BUY REMNANT ADS</a>
+                        </div>
+                        <div class="hero-image">
+                            <div class="image-placeholder hero-img" data-field="hero_image">
+                                <i class="fas fa-image"></i>
+                                <p>Add Hero Image</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -31,10 +98,11 @@ const Components = {
         fields: {
             title: { type: 'text', label: 'Main Title' },
             subtitle: { type: 'textarea', label: 'Subtitle' },
-            cta: { type: 'text', label: 'Call to Action' }
+            cta: { type: 'text', label: 'Call to Action' },
+            hero_image: { type: 'image', label: 'Hero Image' }
         },
         styles: {
-            background: { type: 'select', options: ['bg-gradient-blue', 'bg-gradient-sunset', 'bg-gradient-ocean', 'bg-gradient-forest'] },
+            background: { type: 'select', options: ['bg-white', 'bg-light', 'bg-gradient-blue', 'bg-gradient-sunset', 'bg-gradient-ocean', 'bg-gradient-forest'] },
             textAlign: { type: 'select', options: ['text-center', 'text-left', 'text-right'] }
         }
     },

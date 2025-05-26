@@ -396,9 +396,22 @@ class LandingPageEditor {
         const img = document.createElement('img');
         img.src = src;
         img.alt = 'Uploaded image';
+        img.style.width = '100%';
+        img.style.height = '100%';
+        img.style.objectFit = 'cover';
         
-        // Replace placeholder with image
-        placeholder.parentNode.replaceChild(img, placeholder);
+        // Clear placeholder content and add image
+        placeholder.innerHTML = '';
+        placeholder.appendChild(img);
+        placeholder.classList.remove('image-placeholder');
+        placeholder.classList.add('image-container');
+        
+        // Add click handler to change image
+        placeholder.addEventListener('click', (e) => {
+            e.stopPropagation();
+            this.currentImageTarget = placeholder;
+            document.getElementById('image-modal').classList.add('active');
+        });
     }
 
     switchTab(tabName) {

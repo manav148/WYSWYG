@@ -180,13 +180,20 @@ class App {
     }
 
     loadSamplePage() {
-        // Add a sample hero section to get users started
+        // Add a sample header and hero section to get users started
+        const headerComponent = ComponentUtils.create('header');
+        if (headerComponent) {
+            this.editor.landingPage.appendChild(headerComponent);
+            this.editor.setupComponentEvents(headerComponent);
+        }
+        
         const heroComponent = ComponentUtils.create('hero');
         if (heroComponent) {
             this.editor.landingPage.appendChild(heroComponent);
             this.editor.setupComponentEvents(heroComponent);
-            this.editor.saveState();
         }
+        
+        this.editor.saveState();
     }
 
     showSuccessMessage(message) {
