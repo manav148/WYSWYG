@@ -34,14 +34,15 @@
 /* Component Controls */
 .component-controls {
     position: absolute;
-    top: -30px;
-    right: 0;
+    top: 5px;
+    right: 5px;
     background: #007bff;
     border-radius: 4px;
     padding: 5px;
     display: none;
     gap: 5px;
-    z-index: 10;
+    z-index: 1000;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
 .component:hover .component-controls,
@@ -76,7 +77,7 @@
     border-radius: 4px;
     cursor: move;
     display: none;
-    z-index: 10;
+    z-index: 1000;
 }
 
 .component:hover .drag-handle {
